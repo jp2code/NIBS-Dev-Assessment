@@ -45,9 +45,7 @@ public class NIBSController : ControllerBase
     {
         if (id != nibs.ID)
             return BadRequest();
-
         _context.Entry(nibs).State = EntityState.Modified;
-
         try
         {
             await _context.SaveChangesAsync();
@@ -59,7 +57,6 @@ public class NIBSController : ControllerBase
             else
                 throw;
         }
-
         return NoContent();
     }
 

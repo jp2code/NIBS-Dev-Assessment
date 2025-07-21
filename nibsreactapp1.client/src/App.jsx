@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import "../Content/bootstrap.min.css";
 import ProjectForm from "./ProjectForm.jsx";
 import ProjectTable from "./ProjectTable.jsx";
+import ErrorModal from "./ErrorModal.jsx";
 
 const App = () => {
     const [projects, setProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(null);
+    const [error, setError] = useState("");
+    const [showError, setShowError] = useState(false);
 
-    useEffect(() => {
-        // Fetch initial projects from the server
-        fetchProjects();
-    }, []);
+    const handleError = (msg) => {
+        setError(msg);
+        setShowError(true);
+    };
 
     const fetchProjects = async () => {
         const result = await fetch('/api/NIBS');
@@ -18,7 +21,7 @@ const App = () => {
             const data = await result.json();
             setProjects(data);
         } else {
-            console.error("Failed to fetch projects");
+            handleError("Failed to fetch projects");
         }
     };
 
@@ -31,7 +34,7 @@ const App = () => {
             body: JSON.stringify(project)
         });
         if (!result.ok) {
-            console.error("Failed to add project");
+            handleError("Failed to add project");
             return;
         }
         fetchProjects(); // Refresh the project list after adding
@@ -43,7 +46,7 @@ const App = () => {
             method: 'DELETE'
         });
         if (!result.ok) {
-            console.error("Failed to delete project");
+            handleError("Failed to delete project");
             return;
         }
         fetchProjects(); // Refresh the project list after deletion
@@ -59,20 +62,23 @@ const App = () => {
             body: JSON.stringify(project)
         });
         if (!result.ok) {
-            console.error("Failed to update project");
+            handleError("Failed to update project");
             return;
         }
         fetchProjects(); // Refresh the project list after updating
     };
 
     useEffect(() => {
-        fetch('/api/NIBS')
-            .then(res => res.json())
-            .then(data => setProjects(data));
+        fetchProjects(); // Refresh the project list after updating
     }, []);
 
     return (
         <div className="container mt-5">
+            <ErrorModal
+                isOpen={showError}
+                message={error}
+                onClose={() => setShowError(false)}
+            />
             <h1 className="mb-4">Project Tracker</h1>
             <ProjectForm
                 addProject={addProject}

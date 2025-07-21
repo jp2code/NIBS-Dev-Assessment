@@ -63,28 +63,14 @@ const ProjectForm = ({ addProject, updateProject, deleteProject, selectedProject
         }
         setError("");
         setShowError(false);
-        const response = await fetch('/api/NIBS', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (response.ok) {
-            if (0 < formData.id) {
-                // If an ID exists, we are updating an existing project
-                updateProject(formData);
-            } else {
-                // If no ID exists, we are adding a new project
-                addProject(formData);
-            }
-            setFormData({ name: "", description: "", owner: "", status: "Planned", startDate: "", endDate: "" });
+        if (formData.id && 0 < formData.id) {
+            // Update existing project
+            await updateProject(formData);
         } else {
-            const errorText = await response.text();
-            setError(`Failed to add project. Status: ${response.status}. Details: ${errorText}`);
-            setShowError(true);
+            // Add new project
+            await addProject(formData);
         }
+        setFormData({ id: 0, name: "", description: "", owner: "", status: "Planned", startDate: "", endDate: "" });
     };
 
     const handleDelete = async () => {
