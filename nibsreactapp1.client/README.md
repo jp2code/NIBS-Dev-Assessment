@@ -17,6 +17,20 @@ This is the React client for the Project Tracker application. It provides a user
 - **Error Handling:** All errors are displayed in a modal dialog for better user experience.
 - **Full CRUD:** Supports Create, Read, Update, and Delete operations via REST API calls to the backend.
 
+## Database Schema
+
+The backend uses a SQL Server database with the following schema for the `NIBS` table:
+```sql
+CREATE TABLE NIBS (
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	Name NVARCHAR(100) NOT NULL,
+	Description NVARCHAR(255),
+	StartDate DATETIME,
+	EndDate DATETIME,
+	Status NVARCHAR(50)
+);
+```
+
 ## How It Works
 
 1. On load, the app fetches the list of projects from the backend API (`/api/NIBS`).
