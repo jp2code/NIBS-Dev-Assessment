@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ErrorModal from "./ErrorModal.jsx";
 
-const ProjectForm = ({ addProject }) => {
+const ProjectForm = ({ addProject, updateProject, deleteProject, selectedProject }) => {
     const [formData, setFormData] = useState({
+        id: 0,
         name: "",
         description: "",
         owner: "",
@@ -12,6 +13,31 @@ const ProjectForm = ({ addProject }) => {
     });
     const [error, setError] = useState("");
     const [showError, setShowError] = useState(false);
+
+    useEffect(() => {
+        if (selectedProject) {
+            setFormData({
+                id: selectedProject.id,
+                name: selectedProject.name,
+                description: selectedProject.description,
+                owner: selectedProject.owner,
+                status: selectedProject.status,
+                startDate: selectedProject.startDate,
+                endDate: selectedProject.endDate,
+            });
+        } else {
+            setFormData({
+                id: null,
+                name: "",
+                description: "",
+                owner: "",
+                status: "Planned",
+                startDate: "",
+                endDate: "",
+            });
+        }
+    }, [selectedProject]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -46,12 +72,25 @@ const ProjectForm = ({ addProject }) => {
         });
 
         if (response.ok) {
-            addProject(formData);
+            if (0 < formData.id) {
+                // If an ID exists, we are updating an existing project
+                updateProject(formData);
+            } else {
+                // If no ID exists, we are adding a new project
+                addProject(formData);
+            }
             setFormData({ name: "", description: "", owner: "", status: "Planned", startDate: "", endDate: "" });
         } else {
             const errorText = await response.text();
             setError(`Failed to add project. Status: ${response.status}. Details: ${errorText}`);
             setShowError(true);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (formData.id && window.confirm("Are you sure you want to delete this project?")) {
+            await deleteProject(formData.id);
+            setFormData({ id: null, name: "", description: "", owner: "", status: "Planned", startDate: "", endDate: "" });
         }
     };
 
@@ -83,8 +122,13 @@ const ProjectForm = ({ addProject }) => {
                         <input type="datetime-local" className="form-control" name="endDate" value={formData.endDate} onChange={handleChange} required />
                     </div>
                     <div className="col-md-3">
-                        <button type="submit" className="btn btn-primary w-100">Add Project</button>
+                        <button type="submit" className="btn btn-primary w-100">Save Project</button>
                     </div>
+                    {0 < formData.id && (
+                        <div className="col-md-3">
+                            <button type="button" className="btn btn-danger w-100" onClick={handleDelete}>Delete Project</button>
+                        </div>
+                    )}
                 </div>
             </form>
         </>

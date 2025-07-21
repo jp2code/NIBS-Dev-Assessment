@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ProjectTable = ({ projects }) => {
+const ProjectTable = ({ projects, onSelectProject, selectedProjectId }) => {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("All");
 
@@ -9,6 +9,13 @@ const ProjectTable = ({ projects }) => {
         (project.name.toLowerCase().includes(search.toLowerCase()) ||
             project.owner.toLowerCase().includes(search.toLowerCase()))
     );
+
+    const handleRowClick = (project) => {
+        selectedProjectId = project.id; // Update the selected project ID
+        if (onSelectProject) {
+            onSelectProject(project);
+        }
+    };
 
     return (
         <div>
@@ -38,7 +45,14 @@ const ProjectTable = ({ projects }) => {
                 </thead>
                 <tbody>
                     {filteredProjects.map((proj, idx) => (
-                        <tr key={idx}>
+                        <tr
+                            key={idx}
+                            onClick={() => handleRowClick(proj)}
+                            style={{
+                                backgroundColor: proj.id === selectedProjectId ? '#f0f8ff' : '',
+                                cursor: 'pointer',
+                            }}
+                        >
                             <td>{proj.name}</td>
                             <td>{proj.description}</td>
                             <td>{proj.owner}</td>
