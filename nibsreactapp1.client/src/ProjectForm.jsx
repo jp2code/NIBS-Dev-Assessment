@@ -9,16 +9,45 @@ const ProjectForm = ({ addProject }) => {
         startDate: "",
         endDate: "",
     });
+    const [error, setError] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const validate = () => {
+        if (!formData.name.trim()) return "Project Name is required.";
+        if (!formData.description.trim()) return "Description is required.";
+        if (!formData.owner.trim()) return "Owner is required.";
+        if (!formData.startDate) return "Start Date is required.";
+        if (!formData.endDate) return "End Date is required.";
+        if (new Date(formData.endDate) < new Date(formData.startDate)) return "End Date cannot be before Start Date.";
+        return "";
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        addProject(formData);
-        setFormData({ name: "", description: "", owner: "", status: "Planned", startDate: "", endDate: "" });
+        const validationError = validate();
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+        setError("");
+        const response = await fetch('/api/NIBS', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+            addProject(formData);
+            setFormData({ name: "", description: "", owner: "", status: "Planned", startDate: "", endDate: "" });
+        } else {
+            setError("Failed to add project.");
+        }
     };
 
     return (
