@@ -37,6 +37,9 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
 const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
     env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7112';
 
+// This is the Vite configuration file for the NIBS React application.
+// It sets up the development server, proxy settings, and HTTPS configuration.
+console.log(`Using target: ${target}`);
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [plugin()],
@@ -52,7 +55,7 @@ export default defineConfig({
                 secure: false
             }
         },
-        port: parseInt(env.DEV_SERVER_PORT || '56531'),
+        port: parseInt(env.DEV_SERVER_PORT || '56531'), // default port for the dev server or from environment variable. '56531' is the default port for the NIBS React app.
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),

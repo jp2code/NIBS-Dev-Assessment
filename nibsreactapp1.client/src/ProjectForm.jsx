@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import ErrorModal from "./ErrorModal.jsx";
-import ErrorModal from "./ErrorModal";
 
 const ProjectForm = ({ addProject }) => {
     const [formData, setFormData] = useState({
@@ -11,8 +10,8 @@ const ProjectForm = ({ addProject }) => {
         startDate: "",
         endDate: "",
     });
-    const [showError, setShowError] = useState("");
-
+    const [error, setError] = useState("");
+    const [showError, setShowError] = useState(false);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -37,6 +36,7 @@ const ProjectForm = ({ addProject }) => {
             return;
         }
         setError("");
+        setShowError(false);
         const response = await fetch('/api/NIBS', {
             method: 'POST',
             headers: {
