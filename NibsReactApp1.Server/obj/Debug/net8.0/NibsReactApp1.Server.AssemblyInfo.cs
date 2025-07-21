@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NibsReactApp1.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b0da8bc831efa78799150e963976f4b9e079646c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d186d6a3210ee8b7edcf625bb36b839a2cdc07f5")]
 [assembly: System.Reflection.AssemblyProductAttribute("NibsReactApp1.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NibsReactApp1.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
