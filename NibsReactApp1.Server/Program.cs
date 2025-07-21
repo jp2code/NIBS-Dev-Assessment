@@ -3,10 +3,14 @@ using NibsReactApp1.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add secrets JSON file to configuration
+builder.Configuration.AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: true);
+
+var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer("Data Source=SQL5073.site4now.net;Initial Catalog=DB_9CF886_jp2code;User Id=DB_9CF886_jp2code_admin;Password=PASSWORD;"));
-
+    options.UseSqlServer(connStr));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
